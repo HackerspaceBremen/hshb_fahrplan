@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+	<ReqC ver='1.1' prod='String' lang='de'>
+		<STBReq boardType='DEP'>
+			<Time>19:40:00</Time>
+			<Period>
+				<DateBegin>20140430</DateBegin>
+				<DateEnd>20140430</DateEnd>
+			</Period>
+			<TableStation externalId='000696044#80'/>
+			<ProductFilter>1111111111111111</ProductFilter>
+		</STBReq>
+	</ReqC>

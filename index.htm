@@ -2,9 +2,43 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Fahrplan</title>
+<script src="js/jquery-2.1.0.js"></script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	
+	$.ajax({
+	    url: "request.xml",
+	    cache: false,
+	    dataType: "text",
+	    success: function(data)  {
+	 		blablubb(data);
+	    } 
+	});
+
+	function blablubb(xml){
+	
+		$.ajax({
+		    url: 'http://fahrplaner.vbn.de/hafas/mgate.exe/dl',
+		    data: xml, 
+		    type: 'POST',
+		    contentType: 'application/xml; charset=iso-8859-1',
+		    dataType: 'xml',
+		    error : function (xhr, ajaxOptions, thrownError){  
+		        console.log(xhr.status);          
+		        console.log(thrownError);
+		    },
+		    success: function(data){
+		    	alert(data);
+		    }
+		});
+	};
+});
+
+</script>
 </head>
 <body>
-
+Hallo
 </body>
 </html>

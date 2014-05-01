@@ -48,6 +48,8 @@ function refreshEntrys(){
 				/* Daten vorbereiten */
 				if(category == "Tram")
 					line = name.slice(4);
+				else if(category == "Zug")
+					line = name;
 				else
 					line = name.slice(3);
 		
@@ -87,7 +89,7 @@ function refreshEntrys(){
 				/* Daten in die Elemente schreiben */
 				listItem = document.getElementById("entry" + i.toString());
 				if(listItem){
-					if(category == "Tram")
+					if(category == "Tram" || category == "Zug")
 						listItem.children[0].innerHTML = '<div id="tramline">'+line+'</div>';
 					else
 						listItem.children[0].innerHTML = '<div id="busline">'+line+'</div>';

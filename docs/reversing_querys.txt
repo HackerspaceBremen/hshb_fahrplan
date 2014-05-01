@@ -1,0 +1,39 @@
+Query:
+
+<?xml version="1.0" encoding="utf-8" ?>
+<ReqC ver="1.1" prod="String" lang="DE">
+	<LocValReq id="001" maxNr="20" sMode="1">
+		<ReqLoc type="ST" match="Am Wall, Bremen" />
+	</LocValReq>
+</ReqC>
+
+Antwort:
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ResC xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://demo.hafas.de/xml/vbn/hafasXMLInterface.xsd" ver="1.1" prod="String" lang="EN">
+<LocValRes flag="FINAL" id="001">
+<Station name="Bremen Am Wall" externalId="000696044#80" externalStationNr="000696044" type="WGS84" x="8803675" y="53080484"/>
+</LocValRes>
+</ResC>
+
+Geklappt hat:
+
+http://fahrplaner.vbn.de/hafas/mgate.exe/dl
+
+<?xml version='1.0' encoding='iso-8859-1'?>
+	<ReqC ver='1.1' prod='String' lang='de'>
+		<STBReq boardType='DEP'>
+			<Time>19:40:00</Time>
+			<Period>
+				<DateBegin>20140430</DateBegin>
+				<DateEnd>20140430</DateEnd>
+			</Period>
+			<TableStation externalId='000696044#80'/>
+			<ProductFilter>1111111111111111</ProductFilter>
+		</STBReq>
+	</ReqC>
+
+Ausgabe:
+
+

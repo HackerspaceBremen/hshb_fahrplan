@@ -5,40 +5,64 @@
 <title>Fahrplan</title>
 <script src="js/jquery-2.1.0.js"></script>
 <script type="text/javascript">
+
+var body = document.body;
+var abfahrten;
+var refreshRate = 10000; <!-- in msec -->
+//var timer = window.setInterval(refreshEntrys, refreshRate);
+
+
 $(document).ready(function()
 {
-	
-	$.ajax({
-	    url: "request.xml",
-	    cache: false,
-	    dataType: "text",
-	    success: function(data)  {
-	 		blablubb(data);
-	    } 
-	});
-
-	function blablubb(xml){
-	
-		$.ajax({
-		    url: 'http://fahrplaner.vbn.de/hafas/mgate.exe/dl',
-		    data: xml, 
-		    type: 'POST',
-		    contentType: 'application/xml; charset=iso-8859-1',
-		    dataType: 'xml',
-		    error : function (xhr, ajaxOptions, thrownError){  
-		        console.log(xhr.status);          
-		        console.log(thrownError);
-		    },
-		    success: function(data){
-		    	alert(data);
-		    }
-		});
-	};
+	createEntrys();
+	refreshEntrys();	
 });
 
+function createEntrys(){
+	$.ajax({
+		dataType: "json",
+		url: "php/getStationData.php",
+		success: function(data){
+			console.log("Daten geholt!");
+			for(var i=0;i<data.STBResIPhone.Entries.StationBoardEntry.length;i++){
+				abfahrten[]
+				
+			}
+		},
+		error: function(error){
+			console.log("Fehler beim Daten holen!");
+		}
+	}); 
+	
+}
+
+
+function refreshEntrys(){
+	//$('#border').append(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name);
+}
+
+function createContent(data){
+	console.log(data);
+
+	
+}
+/*
+ * 
+	$('#border').append('<div id="entry'+i+' class="entry">');
+	//if(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].)
+	$('#border').append('<span class="line">Linie</span>');
+	$('#border').append('<span class="name">Zielstation</span>');
+	$('#border').append('<span class="departure">999</span>');
+	$('#border').append('</div>');
+ */
 </script>
 </head>
 <body>
-Hallo
+	<div id="border">
+		<div id="header">
+			<img src="img/haltestelle.svg" alt="">
+		</div>
+
+	</div>
 </body>
 </html>

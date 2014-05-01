@@ -28,10 +28,14 @@ function refreshEntrys(){
 			var line = "0";
 			var category = "Tram";
 			var direction = "blubb";
-			var arrival = "18:00";
+			var arrival = "";
+			var realarrival;
+			var scheduledtime;
+			var difference = 0;
 			var name = "tram 0";
 			var minutes = "999";
 			var arrivaldate;
+			var realarrivaldate;
 			var now = new Date();
 			
 			for(var i=0;i<data.STBResIPhone.Entries.StationBoardEntry.length;i++){
@@ -40,7 +44,7 @@ function refreshEntrys(){
 				direction = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].direction;
 				arrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledDateTime;
 				name = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name;
-				
+			
 				/* Daten vorbereiten */
 				if(category == "Tram")
 					line = name.slice(4);
@@ -54,11 +58,31 @@ function refreshEntrys(){
 						parseInt(arrival.slice(12,14),10)
 				);
 				
-				minutes = Math.floor(Math.abs(arrivaldate-now)/1000/60);
+				/* Verspätungen 
+				if(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].actualTime){
+					var h,m,h2,m2;
+					scheduledtime = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledTime;
+					realarrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].actualTime;
+					h = parseInt(scheduledtime.slice(0,2),10);
+					m = parseInt(scheduledtime.slice(3,5),10);
+					h2 = parseInt(realarrival.slice(0,2),10);
+					m2 = parseInt(realarrival.slice(3,5),10);
+					
+					/* Verspätungen am nächsten tag nicht anzeigen 
+						TODO: Besser machen :D
+						Problem wenn
+						Geplante Zeit 23:59
+						Ankunftzeit: 00:00
+						
+					*/
+					if(h2>h || m2>m)
+						difference = (h2-h)*60 + m2-m;
+					
+				}
+				*/
 				
-				//arrivaldate.setDate(parseInt(arrival.slice(0,2),10));
-				//arrivaldate.setMonth(parseInt(arrival.slice(3,5),10));
-				//arrivaldate.setFullYear(parseInt(arrival.slice(6,8),10)+2000);
+				
+				minutes = Math.floor(Math.abs(arrivaldate-now)/1000/60);
 				
 				/* Daten in die Elemente schreiben */
 				listItem = document.getElementById("entry" + i.toString());
@@ -68,7 +92,10 @@ function refreshEntrys(){
 					else
 						listItem.children[0].innerHTML = '<div id="busline">'+line+'</div>';
 					listItem.children[1].innerHTML = direction;
-					listItem.children[2].innerHTML = minutes.toString();
+					if(difference>0)
+						listItem.children[2].innerHTML = minutes.toString() + '<span class="red"> +' + difference + "</span>";
+					else
+						listItem.children[2].innerHTML = minutes.toString();
 				}
 					
 				if(i>=11) break; /*Nach 12 Einträgen aufhören*/
@@ -81,15 +108,6 @@ function refreshEntrys(){
 	
 }
 
-/*
- * 
-	$('#border').append('<div id="entry'+i+' class="entry">');
-	//if(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].)
-	$('#border').append('<span class="line">Linie</span>');
-	$('#border').append('<span class="name">Zielstation</span>');
-	$('#border').append('<span class="departure">999</span>');
-	$('#border').append('</div>');
- */
 </script>
 </head>
 <body>
@@ -109,34 +127,34 @@ function refreshEntrys(){
 					<td>Abfahrt<br><span class="small">in Minuten</span></td>
 				</tr>
 				<tr id="entry0">
-					<td><div id="tramline">1</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="tramline">23</div></td>
+					<td class="alignleft">Mond</td>
+					<td class="alignright">0</td>
 				</tr>
 				<tr id="entry1">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">42</div></td>
+					<td class="alignleft">Beteigeuze</td>
+					<td class="alignright">2</td>
 				</tr>
 				<tr id="entry2">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">0</div></td>
+					<td class="alignleft">Melmak</td>
+					<td class="alignright">4</td>
 				</tr>
 				<tr id="entry3">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">5</div></td>
+					<td class="alignleft">Hoth</td>
+					<td class="alignright">8</td>
 				</tr>
 				<tr id="entry4">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">1</div></td>
+					<td class="alignleft">Krypton</td>
+					<td class="alignright">16</td>
 				</tr>
 				<tr id="entry5">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">23</div></td>
+					<td class="alignleft">Winkelgasse</td>
+					<td class="alignright">32</td>
 				</tr>
 			</table>
 		</div>
@@ -148,34 +166,34 @@ function refreshEntrys(){
 					<td>Abfahrt<br><span class="small">in Minuten</span></td>
 				</tr>
 				<tr id="entry6">
-					<td><div id="tramline">1</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="tramline">11</div></td>
+					<td class="alignleft">Gallifrey</td>
+					<td class="alignright">64</td>
 				</tr>
 				<tr id="entry7">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">43</div></td>
+					<td class="alignleft">Narnia</td>
+					<td class="alignright">128</td>
 				</tr>
 				<tr id="entry8">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">65</div></td>
+					<td class="alignleft">Gotham</td>
+					<td class="alignright">256</td>
 				</tr>
 				<tr id="entry9">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">97</div></td>
+					<td class="alignleft">Silent Hill</td>
+					<td class="alignright">512</td>
 				</tr>
 				<tr id="entry10">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">31</div></td>
+					<td class="alignleft">Arkham</td>
+					<td class="alignright">1024</td>
 				</tr>
 				<tr id="entry11">
-					<td><div id="busline">27</div></td>
-					<td class="alignleft">Ganz ganz weit weg :D</td>
-					<td class="alignright">999</td>
+					<td><div id="busline">83</div></td>
+					<td class="alignleft">Forgotten Realms</td>
+					<td class="alignright">2048</td>
 				</tr>
 			</table>	
 		</div>	

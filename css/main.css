@@ -37,7 +37,7 @@ body {
 
 
 #tables {
-	height: 75%;
+	height: 76%;
 	background-color: #004a4f;
 }
 
@@ -56,7 +56,7 @@ body {
 #footer {
 	background-color: #004a4f;
 	overflow: hidden;
-	height: 5%;
+	height: 4%;
 	text-align:right;
 }
 

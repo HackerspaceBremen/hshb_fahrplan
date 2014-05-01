@@ -11,6 +11,7 @@ var body = document.body;
 var abfahrten;
 var refreshRate = 60000; <!-- in msec -->
 var timer = window.setInterval(refreshEntrys, refreshRate);
+var timestamp;
 
 
 $(document).ready(function()
@@ -19,6 +20,11 @@ $(document).ready(function()
 });
 
 function refreshEntrys(){
+	
+	timestamp = new Date();
+	document.getElementById("timestamp").innerHTML = timestamp.getHours() + ":" 
+							+ timestamp.getMinutes() + " Uhr";
+	
 	$.ajax({
 		dataType: "json",
 		url: "php/getStationData.php",
@@ -201,7 +207,7 @@ function refreshEntrys(){
 		</div>	
 	</div>
 	<div id="footer">
-		HackInfo, Version 1.1
+		Letzter Refresh: <span id="timestamp"></span>, HSHBInfo Version 1.1
 	</div>
 </body>
 </html>

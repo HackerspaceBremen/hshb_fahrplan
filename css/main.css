@@ -1,0 +1,19 @@
+body {
+	margin:0;
+}
+
+#header {
+	width: 100%;
+	border: 1px solid black;
+	padding:0;
+}
+#header span {
+	font-size: 200%;
+	margin:0;
+}
+
+#header img.halt {
+	width: 5%;
+	height: 5%;
+	margin:0;
+}

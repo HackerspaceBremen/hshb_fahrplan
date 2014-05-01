@@ -9,25 +9,69 @@
 
 var body = document.body;
 var abfahrten;
-var refreshRate = 10000; <!-- in msec -->
-//var timer = window.setInterval(refreshEntrys, refreshRate);
+var refreshRate = 60000; <!-- in msec -->
+var timer = window.setInterval(refreshEntrys, refreshRate);
 
 
 $(document).ready(function()
 {
-	createEntrys();
 	refreshEntrys();	
 });
 
-function createEntrys(){
+function refreshEntrys(){
 	$.ajax({
 		dataType: "json",
 		url: "php/getStationData.php",
 		success: function(data){
 			console.log("Daten geholt!");
+			var listItem;
+			var line = "0";
+			var category = "Tram";
+			var direction = "blubb";
+			var arrival = "18:00";
+			var name = "tram 0";
+			var minutes = "999";
+			var arrivaldate;
+			var now = new Date();
+			
 			for(var i=0;i<data.STBResIPhone.Entries.StationBoardEntry.length;i++){
-				abfahrten[]
+				/* Daten holen */
+				category = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].category;
+				direction = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].direction;
+				arrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledDateTime;
+				name = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name;
 				
+				/* Daten vorbereiten */
+				if(category == "Tram")
+					line = name.slice(4);
+				else
+					line = name.slice(3);
+		
+				arrivaldate = new Date(parseInt(arrival.slice(6,8),10)+2000,
+						parseInt(arrival.slice(3,5),10)-1,
+						parseInt(arrival.slice(0,2),10),
+						parseInt(arrival.slice(9,11),10),
+						parseInt(arrival.slice(12,14),10)
+				);
+				
+				minutes = Math.floor(Math.abs(arrivaldate-now)/1000/60);
+				
+				//arrivaldate.setDate(parseInt(arrival.slice(0,2),10));
+				//arrivaldate.setMonth(parseInt(arrival.slice(3,5),10));
+				//arrivaldate.setFullYear(parseInt(arrival.slice(6,8),10)+2000);
+				
+				/* Daten in die Elemente schreiben */
+				listItem = document.getElementById("entry" + i.toString());
+				if(listItem){
+					if(category == "Tram")
+						listItem.children[0].innerHTML = '<div id="tramline">'+line+'</div>';
+					else
+						listItem.children[0].innerHTML = '<div id="busline">'+line+'</div>';
+					listItem.children[1].innerHTML = direction;
+					listItem.children[2].innerHTML = minutes.toString();
+				}
+					
+				if(i>=11) break; /*Nach 12 Einträgen aufhören*/
 			}
 		},
 		error: function(error){
@@ -37,16 +81,6 @@ function createEntrys(){
 	
 }
 
-
-function refreshEntrys(){
-	//$('#border').append(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name);
-}
-
-function createContent(data){
-	console.log(data);
-
-	
-}
 /*
  * 
 	$('#border').append('<div id="entry'+i+' class="entry">');
@@ -59,13 +93,95 @@ function createContent(data){
 </script>
 </head>
 <body>
-	<div id="border">
-		<div id="header">
-			<img class="halt" src="img/haltestelle.svg" alt="">
-			<span>Am Wall</span>
-			<img class="hshblogo" src="HSpace_HB_Logo.png" alt="">
+	<div id="header">
+		<div id="headerwrap">
+		<img src="img/haltestelle.png">
+		Am Wall
+		<img class="rightimage" src="img/HSpace_HB_Logo.png">
 		</div>
-
+	</div>
+	<div id="tables">
+		<div id="lefttable">
+			<table>
+				<tr class="headrow">
+					<td>Linie</td>
+					<td class="alignleft">Ziel</td>
+					<td>Abfahrt<br><span class="small">in Minuten</span></td>
+				</tr>
+				<tr id="entry0">
+					<td><div id="tramline">1</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry1">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry2">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry3">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry4">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry5">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+			</table>
+		</div>
+		<div id="righttable">
+			<table>
+				<tr class="headrow">
+					<td>Linie</td>
+					<td class="alignleft">Ziel</td>
+					<td>Abfahrt<br><span class="small">in Minuten</span></td>
+				</tr>
+				<tr id="entry6">
+					<td><div id="tramline">1</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry7">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry8">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry9">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry10">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+				<tr id="entry11">
+					<td><div id="busline">27</div></td>
+					<td class="alignleft">Ganz ganz weit weg :D</td>
+					<td class="alignright">999</td>
+				</tr>
+			</table>	
+		</div>	
+	</div>
+	<div id="footer">
+		HackInfo, Version 0.1
 	</div>
 </body>
 </html>

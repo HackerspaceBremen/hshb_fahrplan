@@ -23,7 +23,7 @@ function refreshEntrys(){
 	
 	timestamp = new Date();
 	document.getElementById("timestamp").innerHTML = timestamp.getHours() + ":" 
-							+ timestamp.getMinutes() + " Uhr";
+							+ ((timestamp.getMinutes() < 10) ? "0" + timestamp.getMinutes() : timestamp.getMinutes()) + " Uhr";
 	
 	$.ajax({
 		dataType: "json",
@@ -43,70 +43,70 @@ function refreshEntrys(){
 			var arrivaldate;
 			var realarrivaldate;
 			var now = new Date();
+			var numberofxmlentries = data.STBResIPhone.Entries.StationBoardEntry.length;
 			
-			for(var i=0;i<data.STBResIPhone.Entries.StationBoardEntry.length;i++){
-				/* Daten holen */
-				category = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].category;
-				direction = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].direction;
-				arrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledDateTime;
-				name = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name;
+			var station = "";
 			
-				/* Daten vorbereiten */
-				if(category == "Tram")
-					line = name.slice(4);
-				else if(category == "Zug")
-					line = name;
+			/* Get Station name if exists */
+			if(data.STBResIPhone.Entries.StationBoardEntry["0"].Station["@attributes"].name)
+				station = data.STBResIPhone.Entries.StationBoardEntry["0"].Station["@attributes"].name;
+				/* Strip Bremen */
+				station = station.replace(/Bremen /g,"");
+			document.getElementById("station").innerHTML = station;
+			
+			for(var i=0;i<12;i++)
+			{
+				
+				if(data.STBResIPhone.Entries.StationBoardEntry[i])
+				{
+					
+					/* Daten holen */
+					category = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].category;
+					direction = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].direction;
+					arrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledDateTime;
+					name = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].name;
+				
+					/* Daten vorbereiten */
+					if(category == "Tram")
+						line = name.slice(4);
+					else if(category == "Zug")
+						line = name;
+					else
+						line = name.slice(3);
+			
+					arrivaldate = new Date(parseInt(arrival.slice(6,8),10)+2000,
+							parseInt(arrival.slice(3,5),10)-1,
+							parseInt(arrival.slice(0,2),10),
+							parseInt(arrival.slice(9,11),10),
+							parseInt(arrival.slice(12,14),10)
+					);
+					
+					minutes = Math.floor(Math.abs(arrivaldate-now)/1000/60);
+					
+					/* Daten in die Elemente schreiben */
+					listItem = document.getElementById("entry" + i.toString());
+					if(listItem){
+						if(category == "Tram" || category == "Zug")
+							listItem.children[0].innerHTML = '<div id="tramline">'+line+'</div>';
+						else
+							listItem.children[0].innerHTML = '<div id="busline">'+line+'</div>';
+						listItem.children[1].innerHTML = direction;
+						if(difference>0)
+							listItem.children[2].innerHTML = minutes.toString() + '<span class="red"> +' + difference + "</span>";
+						else
+							listItem.children[2].innerHTML = minutes.toString();
+					}
+					
+				}
 				else
-					line = name.slice(3);
-		
-				arrivaldate = new Date(parseInt(arrival.slice(6,8),10)+2000,
-						parseInt(arrival.slice(3,5),10)-1,
-						parseInt(arrival.slice(0,2),10),
-						parseInt(arrival.slice(9,11),10),
-						parseInt(arrival.slice(12,14),10)
-				);
-				
-				/* Verspätungen 
-				if(data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].actualTime){
-					var h,m,h2,m2;
-					scheduledtime = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].scheduledTime;
-					realarrival = data.STBResIPhone.Entries.StationBoardEntry[i]["@attributes"].actualTime;
-					h = parseInt(scheduledtime.slice(0,2),10);
-					m = parseInt(scheduledtime.slice(3,5),10);
-					h2 = parseInt(realarrival.slice(0,2),10);
-					m2 = parseInt(realarrival.slice(3,5),10);
-					
-					/* Verspätungen am nächsten tag nicht anzeigen 
-						TODO: Besser machen :D
-						Problem wenn
-						Geplante Zeit 23:59
-						Ankunftzeit: 00:00
-						
-					
-					if(h2>h || m2>m)
-						difference = (h2-h)*60 + m2-m;
+				{
+					listItem = document.getElementById("entry" + i.toString());
+					listItem.children[0].innerHTML = '';
+					listItem.children[1].innerHTML = '';
+					listItem.children[2].innerHTML = '';
 					
 				}
-				*/
 				
-				
-				minutes = Math.floor(Math.abs(arrivaldate-now)/1000/60);
-				
-				/* Daten in die Elemente schreiben */
-				listItem = document.getElementById("entry" + i.toString());
-				if(listItem){
-					if(category == "Tram" || category == "Zug")
-						listItem.children[0].innerHTML = '<div id="tramline">'+line+'</div>';
-					else
-						listItem.children[0].innerHTML = '<div id="busline">'+line+'</div>';
-					listItem.children[1].innerHTML = direction;
-					if(difference>0)
-						listItem.children[2].innerHTML = minutes.toString() + '<span class="red"> +' + difference + "</span>";
-					else
-						listItem.children[2].innerHTML = minutes.toString();
-				}
-					
-				if(i>=11) break; /*Nach 12 Einträgen aufhören*/
 			}
 		},
 		error: function(error){
@@ -122,7 +122,7 @@ function refreshEntrys(){
 	<div id="header">
 		<div id="headerwrap">
 		<img src="img/haltestelle.png">
-		Am Wall
+		<span id="station">Ende des Universums</span>
 		<img class="rightimage" src="img/HSpace_HB_Logo.png">
 		</div>
 	</div>

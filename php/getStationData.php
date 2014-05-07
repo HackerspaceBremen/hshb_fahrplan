@@ -16,7 +16,8 @@ error_reporting(-1);
 class getStationData {
 
 	var $url = "http://fahrplaner.vbn.de/hafas/mgate.exe/dl";
-	var $station = "000696044#80"; //Am Wall, Bremen
+	//var $station = "000696044#80"; //Am Wall, Bremen
+	var $station = "000601284#80"; //Hochschule Bremen
 	var $request = "";
 	var $time;
 	var $date;
@@ -37,7 +38,7 @@ class getStationData {
 								"<DateBegin>".$this->date."</DateBegin>".
 								"<DateEnd>".$this->date."</DateEnd>".
 							"</Period>".
-							"<TableStation externalId='000696044#80'/>".
+							"<TableStation externalId='".$this->station."'/>".
 							"<ProductFilter>1111111111111111</ProductFilter>".
 						"</STBReq>".
 					"</ReqC>";

@@ -16,8 +16,8 @@ error_reporting(-1);
 class getStationData {
 
 	var $url = "http://fahrplaner.vbn.de/hafas/mgate.exe/dl";
-	//var $station = "000696044#80"; //Am Wall, Bremen
-	var $station = "000601284#80"; //Hochschule Bremen
+	var $station = "000696044#80"; //Am Wall, Bremen
+	//var $station = "000601284#80"; //Hochschule Bremen
 	var $request = "";
 	var $time;
 	var $date;
